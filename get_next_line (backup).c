@@ -20,6 +20,36 @@
 
 #include "get_next_line.h"
 
+size_t	ft_strlcpy(char *dst, const char *src, size_t size)
+{
+	size_t	length;
+	size_t	index;
+
+	length = ft_strlen((char *) src);
+	index = 0;
+	if (size == 0)
+		return (length);
+	while (index < size - 1 && index < length)
+	{
+		*(dst + index) = *(src + index);
+		++index;
+	}
+	*(dst + index) = '\0';
+	while (src[index] != '\0')
+		++index;
+	return (index);
+}
+
+// static char *append_buffer(char *basin_buffer, char *read_buffer)
+// {
+//  char *temp;
+
+//  temp = ft_strjoin(basin_buffer, read_buffer);
+//  free(basin_buffer);
+//  return (temp);
+// }
+
+
 /*
 static char *read_from_file(char *remaining_buffer, int fd)
 {
@@ -72,42 +102,34 @@ static char *read_from_file(char *remaining_buffer, int fd)
 // 	}
 // 	free(buffer);
 // 	return(fp);
-// }	
-
-static char *append_buffer(char *fp, char *read_buffer)
-{
- char *temp;
-
-//  temp = ft_calloc (ft_strlen(fp) + ft_strlen(read_buffer) + 1, sizeof(char));
- temp = ft_strjoin(fp, read_buffer);
-//  printf("temp:%s\n", temp);
- return (temp);
-}
+// }
 
 char *get_next_line(int fd)
 {
-	char	*fp;
-	char	*buffer;
-	int		char_read;
+	// static char *fp;
 
-	fp = NULL;
-	if (fd < 0 || read(fd, NULL, 0) < 0 || BUFFER_SIZE <= 0) 
-  		return (NULL);
-	buffer = ft_calloc (BUFFER_SIZE + 1, sizeof(char));
-	if (buffer == NULL)
-		return(NULL);
-	char_read = 1;
-	while (char_read > 0)
-	{
-		char_read = read(fd, buffer, BUFFER_SIZE);
-		if (char_read <= 0)
-			return (free (buffer), NULL);
-		buffer[char_read] = '\0';
-		fp = append_buffer(fp, buffer);
-		if (ft_strchr(fp, '\n'))
-			break;
-	}
+	// if (!fp)
+	// 	fp = ft_calloc(1, sizeof (char));
+	// if (!ft_strchr(fp, '\n'))
+	// 	fp = read_from_file(fp, fd);
 
-	free(buffer);
+	// 	int		fd;
+	// char	buf[256];
+	// int		chars_read;
+	
+	// fd = open("demo.txt", O_RDONLY);
+	
+	// while ((chars_read = read(fd, buf, 2)))
+	// {
+	// 	buf[chars_read] = '\0';
+	// 	printf("buf-> %s\n", buf);
+
+	// 	if (ft_strchr(buf, '\n'))
+	// 		break;
+	// }
+	(void) fd;
+	char *fp;
+	fp = ft_calloc(5, sizeof (char));
+	ft_strlcpy(fp, "abc", 4);
 	return(fp);
 }

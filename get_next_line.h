@@ -6,7 +6,7 @@
 /*   By: kkomasat <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/13 21:10:37 by kkomasat          #+#    #+#             */
-/*   Updated: 2024/01/20 16:43:03 by kkomasat         ###   ########.fr       */
+/*   Updated: 2024/01/23 06:43:56 by kkomasat         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,14 +23,15 @@
 // Mandatory function
 char	*get_next_line(int fd);
 
-// Aux. function
+// Auxillary function
 void    *ft_calloc(size_t count, size_t size);
 void    ft_bzero(void *s, size_t n);
 char    *ft_strchr(const char *s, int c);
 char    *ft_strdup(const char *s1);
 char    *join_string(char *ptr, char const *s1, char const *s2);
 char    *ft_strjoin(char const *s1, char const *s2);
+// char	*ft_strjoin(char *start, char *buff);
 size_t  ft_strlen(const char *s);
-
+// char	*ft_join(char *dest, char *s1, char *s2);
 
 #endif
