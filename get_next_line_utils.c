@@ -61,9 +61,9 @@ char	*ft_strdup(const char *s1)
 	int		len;
 
 	len = 0;
-	// while (s1[len])
-	// 	len++;
-	len = ft_strlen(s1);
+	while (s1[len])
+		len++;
+	// len = ft_strlen(s1);
 	// dest = malloc((len + 1) * sizeof(char));
 	dest = (char *)ft_calloc ((len + 1), sizeof(char));
 
@@ -76,26 +76,6 @@ char	*ft_strdup(const char *s1)
 	return (dest);
 }
 
-char	*join_string(char *ptr, char const *s1, char const *s2)
-{
-	size_t	i;
-	size_t	j;
-
-	i = 0;
-	while (s1[i] != '\0')
-	{
-		ptr[i] = s1[i];
-		++i;
-	}
-	j = 0;
-	while (s2[j] != '\0')
-	{
-		ptr[i + j] = s2[j];
-		++j;
-	}
-	ptr[i + j] = '\0';
-	return (ptr);
-}
 // char	*ft_strjoin(char *start, char *buff)
 // {
 // 	char	*ptr;
@@ -135,6 +115,27 @@ char	*join_string(char *ptr, char const *s1, char const *s2)
 // 	dest[i + j] = '\0';
 // 	return (dest);
 // }
+
+char	*join_string(char *ptr, char const *s1, char const *s2)
+{
+	size_t	i;
+	size_t	j;
+
+	i = 0;
+	while (s1[i] != '\0')
+	{
+		ptr[i] = s1[i];
+		++i;
+	}
+	j = 0;
+	while (s2[j] != '\0')
+	{
+		ptr[i + j] = s2[j];
+		++j;
+	}
+	ptr[i + j] = '\0';
+	return (ptr);
+}
 
 char	*ft_strjoin(char const *s1, char const *s2)
 {

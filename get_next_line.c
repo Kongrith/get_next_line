@@ -74,40 +74,157 @@ static char *read_from_file(char *remaining_buffer, int fd)
 // 	return(fp);
 // }	
 
-static char *append_buffer(char *fp, char *read_buffer)
-{
- char *temp;
+// static char *append_buffer(char *fp, char *read_buffer)
+// {
+//  char *temp;
 
-//  temp = ft_calloc (ft_strlen(fp) + ft_strlen(read_buffer) + 1, sizeof(char));
- temp = ft_strjoin(fp, read_buffer);
-//  printf("temp:%s\n", temp);
- return (temp);
+// //  temp = ft_calloc (ft_strlen(fp) + ft_strlen(read_buffer) + 1, sizeof(char));
+//  temp = ft_strjoin(fp, read_buffer);
+// //  printf("temp:%s\n", temp);
+//  return (temp);
+// }
+
+char	*ft_move_start(char	*start)
+{
+	char	*new_buff;
+	int		i;
+	int		j;
+
+	i = 0;
+	while (start[i] && start[i] != '\n')
+		i++;
+	if (start[i] == '\0')
+	{
+		free(start);
+		return (NULL);
+	}
+	i += (start[i] == '\n');
+	new_buff = (char *)malloc(1 + ft_strlen(start) - i);
+	if (!new_buff)
+		return (NULL);
+	j = 0;
+	while (start[i + j])
+	{
+		new_buff[j] = start[i + j];
+		j++;
+	}
+	new_buff[j] = '\0';
+	free(start);
+	return (new_buff);
+}
+
+char	*ft_readed_line(char *start)
+{
+	int		i;
+	char	*line;
+
+	if (!start || !start[0])
+		return (NULL);
+	i = 0;
+	while (start[i] && start[i] != '\n')
+		i++;
+	if (start[i] == '\n')
+		i++;
+	line = (char *)malloc(1 + i * sizeof(char));
+	if (!line)
+		return (NULL);
+	i = 0;
+	while (start[i] && start[i] != '\n')
+	{
+		line[i] = start[i];
+		i++;
+	}
+	if (start[i] == '\n')
+		line[i++] = '\n';
+	line[i] = '\0';
+	return (line);
+}
+
+char	*ft_new_left_str(char *left_str)
+{
+	int		i;
+	int		j;
+	char	*str;
+
+	i = 0;
+	while (left_str[i] && left_str[i] != '\n')
+		i++;
+	if (!left_str[i])
+	{
+		free(left_str);
+		return (NULL);
+	}
+	str = (char *)malloc(sizeof(char) * (ft_strlen(left_str) - i + 1));
+	if (!str)
+		return (NULL);
+	i++;
+	j = 0;
+	while (left_str[i])
+		str[j++] = left_str[i++];
+	str[j] = '\0';
+	free(left_str);
+	return (str);
+}
+
+char	*ft_get_line(char *left_str)
+{
+	int		i;
+	char	*str;
+
+	i = 0;
+	if (!left_str[i])
+		return (NULL);
+	while (left_str[i] && left_str[i] != '\n')
+		i++;
+	str = (char *)malloc(sizeof(char) * (i + 2));
+	if (!str)
+		return (NULL);
+	i = 0;
+	while (left_str[i] && left_str[i] != '\n')
+	{
+		str[i] = left_str[i];
+		i++;
+	}
+	if (left_str[i] == '\n')
+	{
+		str[i] = left_str[i];
+		i++;
+	}
+	str[i] = '\0';
+	return (str);
 }
 
 char *get_next_line(int fd)
 {
-	char	*fp;
-	char	*buffer;
-	int		char_read;
+	static char	*fp;
+	char		*buffer;
+	char		*line;
+	int			char_read;
 
-	fp = NULL;
-	if (fd < 0 || read(fd, NULL, 0) < 0 || BUFFER_SIZE <= 0) 
+	fp = "";
+	if (fd < 0 || BUFFER_SIZE <= 0) 
   		return (NULL);
-	buffer = ft_calloc (BUFFER_SIZE + 1, sizeof(char));
-	if (buffer == NULL)
+	buffer = (char *)ft_calloc (BUFFER_SIZE + 1, sizeof(char));
+	if (!buffer)
 		return(NULL);
 	char_read = 1;
-	while (char_read > 0)
+	while (!(ft_strchr(fp, '\n')) && char_read != 0)
 	{
 		char_read = read(fd, buffer, BUFFER_SIZE);
-		if (char_read <= 0)
+		if (char_read == -1)
 			return (free (buffer), NULL);
 		buffer[char_read] = '\0';
-		fp = append_buffer(fp, buffer);
-		if (ft_strchr(fp, '\n'))
-			break;
+		fp = ft_strjoin(fp, buffer);
+		// fp = append_buffer(fp, buffer);
+		// if (ft_strchr(fp, '\n'))
+		// 	break;
 	}
-
 	free(buffer);
-	return(fp);
+	// if (!fp)
+	// 	return (NULL);
+	// buffer = ft_readed_line(fp);
+	// fp = ft_move_start(fp);
+	line = ft_get_line(fp);
+	fp = ft_new_left_str(fp);
+	return(line);
 }
