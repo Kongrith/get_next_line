@@ -12,6 +12,16 @@
 
 #include "get_next_line.h"
 
+size_t	ft_strlen(const char *s)
+{
+	size_t	i;
+
+	i = 0;
+	while (s[i] != '\0')
+		++i;
+	return (i);
+}
+
 void	ft_bzero(void *s, size_t n)
 {
 	size_t			i;
@@ -37,22 +47,41 @@ void	*ft_calloc(size_t count, size_t size)
 	return (p);
 }
 
-char	*ft_strchr(const char *s, int c)
+char	*ft_strchr(char *s, int c)
 {
-	char	*ptr;
+	int	i;
 
-	c = c % 256;
-	ptr = (char *) s;
-	while (*ptr != '\0')
-	{
-		if (*ptr == c)
-			return (ptr);
-		++ptr;
-	}
+	i = 0;
+	if (!s)
+		return (0);
 	if (c == '\0')
-		return (ptr);
-	return (NULL);
+		return ((char *)&s[ft_strlen(s)]);
+	while (s[i] != '\0')
+	{
+		if (s[i] == (char) c)
+			return ((char *)&s[i]);
+		i++;
+	}
+	return (0);
 }
+
+// ของเรา
+// char	*ft_strchr(const char *s, int c)
+// {
+// 	char	*ptr;
+
+// 	c = c % 256;
+// 	ptr = (char *) s;
+// 	while (*ptr != '\0')
+// 	{
+// 		if (*ptr == c)
+// 			return (ptr);
+// 		++ptr;
+// 	}
+// 	if (c == '\0')
+// 		return (ptr);
+// 	return (NULL);
+// }
 
 char	*ft_strdup(const char *s1)
 {
@@ -76,95 +105,75 @@ char	*ft_strdup(const char *s1)
 	return (dest);
 }
 
-// char	*ft_strjoin(char *start, char *buff)
-// {
-// 	char	*ptr;
-
-// 	if (!start)
-// 	{
-// 		start = (char *)malloc(1 * sizeof(char));
-// 		start[0] = '\0';
-// 	}
-// 	if (!start || !buff)
-// 		return (NULL);
-// 	ptr = (char *)malloc(1 + ft_strlen(start) + ft_strlen(buff) * sizeof(char));
-// 	if (!ptr)
-// 		return (NULL);
-// 	ptr = ft_join(ptr, start, buff);
-// 	free(start);
-// 	return (ptr);
-// }
-
-// char	*ft_join(char *dest, char *s1, char *s2)
+// char	*join_string(char *ptr, char const *s1, char const *s2)
 // {
 // 	size_t	i;
 // 	size_t	j;
 
 // 	i = 0;
-// 	while (s1 && s1[i])
+// 	while (s1[i] != '\0')
 // 	{
-// 		dest[i] = s1[i];
-// 		i++;
+// 		ptr[i] = s1[i];
+// 		++i;
 // 	}
 // 	j = 0;
-// 	while (s2 && s2[j])
+// 	while (s2[j] != '\0')
 // 	{
-// 		dest[i + j] = s2[j];
-// 		j++;
+// 		ptr[i + j] = s2[j];
+// 		++j;
 // 	}
-// 	dest[i + j] = '\0';
-// 	return (dest);
+// 	ptr[i + j] = '\0';
+// 	return (ptr);
 // }
 
-char	*join_string(char *ptr, char const *s1, char const *s2)
+// char	*ft_strjoin(char const *s1, char const *s2)
+// {
+// 	char	*ptr;
+// 	size_t	len1;
+// 	size_t	len2;
+
+// 	if (!s1 && !s2)
+// 		return (ft_strdup(""));
+// 	if (s1 && !s2)
+// 		return (ft_strdup(s1));
+// 	if (!s1 && s2)
+// 		return (ft_strdup(s2));
+// 	len1 = ft_strlen((char *) s1);
+// 	len2 = ft_strlen((char *) s2);
+// 	ptr = (char *) malloc(sizeof(char) * (len1 + len2 + 1));
+// 	// ptr = (char *) ft_calloc ((len1 + len2 + 1), sizeof(char));
+// 	if (!ptr)
+// 		return (0);
+// 	ptr = join_string(ptr, s1, s2);
+// 	return (ptr);
+// }
+
+char	*ft_strjoin(char *left_str, char *buff)
 {
 	size_t	i;
 	size_t	j;
+	char	*str;
 
-	i = 0;
-	while (s1[i] != '\0')
+	if (!left_str)
 	{
-		ptr[i] = s1[i];
-		++i;
+		left_str = (char *)malloc(1 * sizeof(char));
+		left_str[0] = '\0';
 	}
+	if (!left_str || !buff)
+		return (NULL);
+	// str = malloc(sizeof(char) * ((ft_strlen(left_str) + ft_strlen(buff)) + 1));
+	str = ft_calloc ( ft_strlen(left_str) + ft_strlen(buff) + 1, sizeof(char));
+	if (str == NULL)
+		return (NULL);
+	i = -1;
 	j = 0;
-	while (s2[j] != '\0')
-	{
-		ptr[i + j] = s2[j];
-		++j;
-	}
-	ptr[i + j] = '\0';
-	return (ptr);
+	if (left_str)
+		while (left_str[++i] != '\0')
+			str[i] = left_str[i];
+	while (buff[j] != '\0')
+		str[i++] = buff[j++];
+	str[ft_strlen(left_str) + ft_strlen(buff)] = '\0';
+	free(left_str);
+	return (str);
 }
 
-char	*ft_strjoin(char const *s1, char const *s2)
-{
-	char	*ptr;
-	size_t	len1;
-	size_t	len2;
-
-	if (!s1 && !s2)
-		return (ft_strdup(""));
-	if (s1 && !s2)
-		return (ft_strdup(s1));
-	if (!s1 && s2)
-		return (ft_strdup(s2));
-	len1 = ft_strlen((char *) s1);
-	len2 = ft_strlen((char *) s2);
-	// ptr = (char *) malloc(sizeof(char) * (len1 + len2 + 1));
-	ptr = (char *) ft_calloc ((len1 + len2 + 1), sizeof(char));
-	if (!ptr)
-		return (0);
-	ptr = join_string(ptr, s1, s2);
-	return (ptr);
-}
-
-size_t	ft_strlen(const char *s)
-{
-	size_t	i;
-
-	i = 0;
-	while (s[i] != '\0')
-		++i;
-	return (i);
-}
