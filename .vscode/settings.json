@@ -1,7 +1,0 @@
-{
-    "files.associations": {
-        "stdlib.h": "c",
-        "test_strjoin": "c",
-        "get_next_line.h": "c"
-    }
-}
