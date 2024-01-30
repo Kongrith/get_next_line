@@ -20,61 +20,6 @@
 
 #include "get_next_line.h"
 
-/*
-static char *read_from_file(char *remaining_buffer, int fd)
-{
-	char *buffer;
-	int bytes_read;
-
-	buffer = (void *) ft_calloc(BUFFER_SIZE + 1, sizeof(char));
-	if (buffer == NULL)
-		return(NULL);
-	bytes_read = 1;
-	while (bytes_read > 0)
-	{
-		bytes_read = read(fd, buffer, BUFFER_SIZE);
-		if (bytes_read == -1)
-			return(free(buffer), NULL);
-		buffer[bytes_read] = '\0';
-		remaining_buffer = append_buffer(remaining_buffer, buffer);
-		if (ft_strchr(basin_buffer, '\n'))
-			break;
-	}
-	free(buffer);
-	return (remaining_buffer);
-}
-*/
-
-
-// static char *read_from_file(char *fp, int fd)
-// {
-// 	int		bytes_read;
-// 	char	*buffer;
-
-// 	buffer = ft_calloc (BUFFER_SIZE + 1, sizeof(char));
-// 	if (buffer == NULL)
-// 		return (NULL);
-// 	bytes_read = read(fd, buffer, BUFFER_SIZE);
-// 	if (bytes_read == -1)
-// 		return (free (buffer), NULL);
-// 	if (ft_strchr(fp, '\n'))
-// 	{
-// 		fp = append_buffer(fp, buffer);
-// 		return(fp);
-// 	}
-// 	while (bytes_read > 0)
-// 	{
-// 		bytes_read = read(fd, buffer, BUFFER_SIZE);
-// 		if (bytes_read == -1)
-// 			return (free (buffer), NULL);
-// 		buffer[bytes_read] = '\0';
-// 		fp = append_buffer(fp, buffer);
-// 	}
-// 	free(buffer);
-// 	return(fp);
-// }	
-
-
 char	*ft_get_line(char *left_str)
 {
 	int		i;
@@ -129,25 +74,14 @@ char	*ft_new_left_str(char *left_str)
 	return (str);
 }
 
-// static char *append_buffer(char *fp, char *read_buffer)
-// {
-//  char *temp;
-
-// //  temp = ft_calloc (ft_strlen(fp) + ft_strlen(read_buffer) + 1, sizeof(char));
-//  temp = ft_strjoin(fp, read_buffer);
-// //  free(fp);
-//  fp = temp;
-//  return(fp);
-// }
-
-char *read_from_file(int fd, char *fp)
+char	*read_from_file(int fd, char *fp)
 {
 	char		*buffer;
 	int			char_read;
-	
-	buffer = ft_calloc (BUFFER_SIZE + 1, sizeof(char));
+
+	buffer = malloc ((BUFFER_SIZE + 1) * sizeof(char));
 	if (!buffer)
-		return(NULL);
+		return (NULL);
 	char_read = 1;
 	while (!ft_strchr(fp, '\n') && char_read != 0)
 	{
@@ -155,28 +89,26 @@ char *read_from_file(int fd, char *fp)
 		if (char_read == -1)
 		{
 			free(buffer);
-			return(NULL);
+			return (NULL);
 		}
 		buffer[char_read] = '\0';
 		fp = ft_strjoin(fp, buffer);
 	}
 	free(buffer);
-	return(fp);
+	return (fp);
 }
 
-char *get_next_line(int fd)
+char	*get_next_line(int fd)
 {
 	static char	*fp;
 	char		*line;
 
-	if (fd < 0 || BUFFER_SIZE <= 0) 
-  		return (0);
-
+	if (fd < 0 || BUFFER_SIZE <= 0)
+		return (0);
 	fp = read_from_file(fd, fp);
 	if (!fp)
-		return(NULL);
-
+		return (NULL);
 	line = ft_get_line(fp);
 	fp = ft_new_left_str(fp);
-	return(line);
+	return (line);
 }
