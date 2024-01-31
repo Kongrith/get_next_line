@@ -6,7 +6,7 @@
 /*   By: kkomasat <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/13 21:09:31 by kkomasat          #+#    #+#             */
-/*   Updated: 2024/01/31 16:01:05 by kkomasat         ###   ########.fr       */
+/*   Updated: 2024/01/31 16:14:34 by kkomasat         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,9 @@ and return that line. The prog implements dynamic buffer.
 #include "get_next_line.h"
 #include <stdio.h>
 
+/* this function read data from specific file descriptor with adjustable buffer.
+the function returns an accumulated data until meet the nexline or end of file.
+*/
 char	*read_from_file(int fd, char *data)
 {
 	char		*buffer;
@@ -45,8 +48,9 @@ char	*read_from_file(int fd, char *data)
 	return (data);
 }
 
-/*
-	this function help the extract line 
+/* this function extracts the only new line by using '\n'.
+Moreover, the function guard the return value for the end of file also.
+Please note that the return should include the '\n' but not include the EOF. 
 */
 char	*elaborate_data(char *data)
 {
@@ -76,6 +80,9 @@ char	*elaborate_data(char *data)
 	return (extracted_line);
 }
 
+/* this function handling the mix newline character with stash buffer.
+The function return either the remaining buffer nor NULL for EOF case. 
+*/
 char	*stash_data(char *data)
 {
 	int		i;
