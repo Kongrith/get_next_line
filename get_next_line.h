@@ -6,7 +6,7 @@
 /*   By: kkomasat <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/13 21:10:37 by kkomasat          #+#    #+#             */
-/*   Updated: 2024/01/31 03:46:59 by kkomasat         ###   ########.fr       */
+/*   Updated: 2024/01/31 15:54:10 by kkomasat         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,9 +20,9 @@
 
 // Mandatory function
 char	*get_next_line(int fd);
-char	*read_from_file(int fd, char *fp);
-char	*ft_new_left_str(char *left_str);
-char	*ft_get_line(char *left_str);
+char	*read_from_file(int fd, char *data);
+char	*elaborate_data(char *data);
+char	*stash_data(char *data);
 
 // Utility function
 size_t	ft_strlen(const char *s);
