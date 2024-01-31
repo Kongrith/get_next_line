@@ -18,13 +18,13 @@
 #  define BUFFER_SIZE 1
 # endif
 
-// Mandatory function
+// Mandatory Function
 char	*get_next_line(int fd);
 char	*read_from_file(int fd, char *data);
 char	*elaborate_data(char *data);
 char	*stash_data(char *data);
 
-// Utility function
+// Utility Function
 size_t	ft_strlen(const char *s);
 char	*ft_strchr(char *s, int c);
 char	*ft_strdup(const char *s1);

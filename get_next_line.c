@@ -6,7 +6,7 @@
 /*   By: kkomasat <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/13 21:09:31 by kkomasat          #+#    #+#             */
-/*   Updated: 2024/01/31 16:14:34 by kkomasat         ###   ########.fr       */
+/*   Updated: 2024/01/31 16:41:22 by kkomasat         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,12 @@
 and return that line. The prog implements dynamic buffer.
 
 	Return:
-	- Return either the next line of a specific the file descriptor, nor EOF null.
+	- Return either the next line of a specific the file descriptor, nor null.
+
+	Guidelines:
+	- https://medium.com/@lannur-s/gnl-c3cff1ee552b
+	- https://www.youtube.com/watch?v=-Mt2FdJjVno
+	- https://www.youtube.com/watch?v=8E9siq7apUU
 */
 
 #include "get_next_line.h"
@@ -62,7 +67,9 @@ char	*elaborate_data(char *data)
 	i = 0;
 	while (data[i] && data[i] != '\n')
 		i++;
-	extracted_line = (char *) malloc((i + 2) * sizeof(char));
+	if (data[i] == '\n')
+		i++;
+	extracted_line = (char *) malloc((i + 1) * sizeof(char));
 	if (!extracted_line)
 		return (NULL);
 	i = 0;
@@ -116,7 +123,7 @@ char	*get_next_line(int fd)
 	static char	*data;
 	char		*line;
 
-	if (fd < 0 || BUFFER_SIZE <= 0)
+	if (BUFFER_SIZE <= 0)
 		return (0);
 	data = read_from_file(fd, data);
 	if (!data)
