@@ -6,7 +6,7 @@
 /*   By: kkomasat <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/13 21:10:37 by kkomasat          #+#    #+#             */
-/*   Updated: 2024/01/31 15:54:10 by kkomasat         ###   ########.fr       */
+/*   Updated: 2024/02/02 20:34:09 by kkomasat         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,12 +15,13 @@
 # include <stdlib.h>
 # include <unistd.h>
 # ifndef BUFFER_SIZE
-#  define BUFFER_SIZE 1
+#  define BUFFER_SIZE 42
 # endif
 
 // Mandatory Function
 char	*get_next_line(int fd);
 char	*read_from_file(int fd, char *data);
+void	data_copy(char *data, char *extracted_line);
 char	*elaborate_data(char *data);
 char	*stash_data(char *data);
 

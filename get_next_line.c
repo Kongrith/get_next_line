@@ -6,13 +6,13 @@
 /*   By: kkomasat <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/13 21:09:31 by kkomasat          #+#    #+#             */
-/*   Updated: 2024/01/31 16:41:22 by kkomasat         ###   ########.fr       */
+/*   Updated: 2024/02/02 20:50:03 by kkomasat         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 /*  Description:
-	- Read everything character by character until program reach a newline character
-and return that line. The prog implements dynamic buffer.
+	- Read everything character by character until program reach a newline
+	character and return that line. The prog implements dynamic buffer.
 
 	Return:
 	- Return either the next line of a specific the file descriptor, nor null.
@@ -24,7 +24,6 @@ and return that line. The prog implements dynamic buffer.
 */
 
 #include "get_next_line.h"
-#include <stdio.h>
 
 /* this function read data from specific file descriptor with adjustable buffer.
 the function returns an accumulated data until meet the nexline or end of file.
@@ -57,6 +56,25 @@ char	*read_from_file(int fd, char *data)
 Moreover, the function guard the return value for the end of file also.
 Please note that the return should include the '\n' but not include the EOF. 
 */
+
+void	data_copy(char *data, char *extracted_line)
+{
+	int	i;
+
+	i = 0;
+	while (data[i] && data[i] != '\n')
+	{
+		extracted_line[i] = data[i];
+		i++;
+	}
+	if (data[i] == '\n')
+	{
+		extracted_line[i] = data[i];
+		i++;
+	}
+	extracted_line[i] = '\0';
+}
+
 char	*elaborate_data(char *data)
 {
 	int		i;
@@ -72,18 +90,7 @@ char	*elaborate_data(char *data)
 	extracted_line = (char *) malloc((i + 1) * sizeof(char));
 	if (!extracted_line)
 		return (NULL);
-	i = 0;
-	while (data[i] && data[i] != '\n')
-	{
-		extracted_line[i] = data[i];
-		i++;
-	}
-	if (data[i] == '\n')
-	{
-		extracted_line[i] = data[i];
-		i++;
-	}
-	extracted_line[i] = '\0';
+	data_copy(data, extracted_line);
 	return (extracted_line);
 }
 
@@ -132,3 +139,32 @@ char	*get_next_line(int fd)
 	data = stash_data(data);
 	return (line);
 }
+
+/*
+int	main(void)
+{
+	int		fd;
+	int		count;
+	char	*line;
+	
+	fd = open("read_error.txt", O_RDONLY);
+	if (fd == -1)
+	{
+		printf("Error opening file");
+		return(1);
+	}
+
+	count = 0;
+	line = get_next_line(fd);
+	while (line != NULL)
+	{
+		printf("[%d]:%s", count, line);
+		free(line);
+		count += 1;
+		line = get_next_line(fd);
+	}
+	free(line);
+	close(fd);
+	return (0);
+}
+*/
