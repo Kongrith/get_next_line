@@ -24,7 +24,7 @@ size_t	ft_strlen(const char *s)
 
 char	*ft_strchr(char *s, int c)
 {
-	int		i;
+	int	i;
 
 	i = 0;
 	if (s == NULL)
@@ -47,9 +47,12 @@ char	*ft_strdup(const char *s1)
 	int		len;
 
 	len = ft_strlen(s1);
-	dest = (char *) malloc ((len + 1) * sizeof(char));
-	if (dest == NULL)
+	dest = (char *)malloc((len + 1) * sizeof(char));
+	if (!dest)
+	{
+		free(dest);
 		return (NULL);
+	}
 	p = dest;
 	while (*s1)
 		*p++ = *s1++;
@@ -81,20 +84,27 @@ char	*join_string(char *ptr, char *s1, char *s2)
 char	*ft_strjoin(char *s1, char *s2)
 {
 	char	*ptr;
-	size_t	len1;
-	size_t	len2;
 
 	if (!s1 && !s2)
+	{
+		free(s1);
 		return (ft_strdup(""));
+	}
 	if (s1 && !s2)
+	{
+		ptr = ft_strdup(s1);
+		free(s1);
 		return (ft_strdup(s1));
+	}
 	if (!s1 && s2)
 		return (ft_strdup(s2));
-	len1 = ft_strlen((char *) s1);
-	len2 = ft_strlen((char *) s2);
-	ptr = (char *) malloc ((len1 + len2 + 1) * sizeof(char));
+	ptr = (char *)malloc((ft_strlen((char *)s1) + ft_strlen((char *)s2) \
+							+ 1) * sizeof(char));
 	if (!ptr)
-		return (0);
+	{
+		free(ptr);
+		return (NULL);
+	}
 	ptr = join_string(ptr, s1, s2);
 	free(s1);
 	return (ptr);

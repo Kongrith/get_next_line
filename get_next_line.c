@@ -25,41 +25,14 @@
 
 #include "get_next_line.h"
 
-/* this function read data from specific file descriptor with adjustable buffer.
-the function returns an accumulated data until meet the nexline or end of file.
-*/
-char	*read_from_file(int fd, char *data)
-{
-	char		*buffer;
-	int			char_read;
-
-	buffer = malloc ((BUFFER_SIZE + 1) * sizeof(char));
-	if (!buffer)
-		return (NULL);
-	char_read = 1;
-	while (!ft_strchr(data, '\n') && char_read != 0)
-	{
-		char_read = read(fd, buffer, BUFFER_SIZE);
-		if (char_read == -1)
-		{
-			free(buffer);
-			return (NULL);
-		}
-		buffer[char_read] = '\0';
-		data = ft_strjoin(data, buffer);
-	}
-	free(buffer);
-	return (data);
-}
-
 /* this function extracts the only new line by using '\n'.
 Moreover, the function guard the return value for the end of file also.
-Please note that the return should include the '\n' but not include the EOF. 
+Please note that the return should include the '\n' but not include the EOF.
 */
 
-void	data_copy(char *data, char *extracted_line)
+void data_copy(char *data, char *extracted_line)
 {
-	int	i;
+	int i;
 
 	i = 0;
 	while (data[i] && data[i] != '\n')
@@ -75,10 +48,10 @@ void	data_copy(char *data, char *extracted_line)
 	extracted_line[i] = '\0';
 }
 
-char	*elaborate_data(char *data)
+char *elaborate_data(char *data)
 {
-	int		i;
-	char	*extracted_line;
+	int i;
+	char *extracted_line;
 
 	if (!data[0])
 		return (NULL);
@@ -87,23 +60,23 @@ char	*elaborate_data(char *data)
 		i++;
 	if (data[i] == '\n')
 		i++;
-	extracted_line = (char *) malloc((i + 1) * sizeof(char));
+	extracted_line = (char *)malloc((i + 1) * sizeof(char));
 	if (!extracted_line)
+	{
+		free(extracted_line);
 		return (NULL);
+	}
 	data_copy(data, extracted_line);
 	return (extracted_line);
 }
 
 /* this function handling the mix newline character with stash buffer.
-The function return either the remaining buffer nor NULL for EOF case. 
+The function return either the remaining buffer nor NULL for EOF case.
 */
-char	*stash_data(char *data)
+char *stash_data(char *data, int i, int j)
 {
-	int		i;
-	int		j;
-	char	*stash_data;
+	char *stash_data;
 
-	i = 0;
 	while (data[i] && data[i] != '\n')
 		i++;
 	if (!data[i])
@@ -113,8 +86,11 @@ char	*stash_data(char *data)
 	}
 	stash_data = (char *)malloc((ft_strlen(data) + 1 - i) * sizeof(char));
 	if (!stash_data)
+	{
+		free(data);
+		free(stash_data);
 		return (NULL);
-	j = 0;
+	}
 	while (data[i + j + 1])
 	{
 		stash_data[j] = data[i + j + 1];
@@ -125,46 +101,60 @@ char	*stash_data(char *data)
 	return (stash_data);
 }
 
-char	*get_next_line(int fd)
+/* this function read data from specific file descriptor with adjustable buffer.
+the function returns an accumulated data until meet the nexline or end of file.
+*/
+char *read_from_file(int fd, char *data)
 {
-	static char	*data;
-	char		*line;
+	char *buffer;
+	int char_read;
 
-	if (BUFFER_SIZE <= 0)
-		return (0);
+	buffer = (char *)malloc((BUFFER_SIZE + 1) * sizeof(char));
+	if (!buffer)
+	{
+		free(buffer);
+		return (NULL);
+	}
+	char_read = 1;
+	while (!ft_strchr(data, '\n') && char_read != 0)
+	{
+		char_read = read(fd, buffer, BUFFER_SIZE);
+		if (char_read < 0)
+		{
+			free(buffer);
+			if (data)
+				free(data);
+			return (NULL);
+		}
+		buffer[char_read] = '\0';
+		data = ft_strjoin(data, buffer);
+		if (data == NULL)
+			return (NULL);
+	}
+	free(buffer);
+	return (data);
+}
+
+char *get_next_line(int fd)
+{
+	static char *data;
+	char *line;
+
+	if (BUFFER_SIZE <= 0 || fd < 0)
+		return (NULL);
 	data = read_from_file(fd, data);
 	if (!data)
+	{
+		free(data);
 		return (NULL);
+	}
+	// if (!data)
+	// 	data = ft_strdup("");
 	line = elaborate_data(data);
-	data = stash_data(data);
+	data = stash_data(data, 0, 0);
+	// if (data == NULL)
+	// 	return (NULL);
+	// if (data == NULL)
+	// 	free(data);
 	return (line);
 }
-
-/*
-int	main(void)
-{
-	int		fd;
-	int		count;
-	char	*line;
-	
-	fd = open("read_error.txt", O_RDONLY);
-	if (fd == -1)
-	{
-		printf("Error opening file");
-		return(1);
-	}
-
-	count = 0;
-	line = get_next_line(fd);
-	while (line != NULL)
-	{
-		printf("[%d]:%s", count, line);
-		free(line);
-		count += 1;
-		line = get_next_line(fd);
-	}
-	free(line);
-	close(fd);
-	return (0);
-}
-*/
